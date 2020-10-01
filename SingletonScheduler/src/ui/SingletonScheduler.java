@@ -8,15 +8,18 @@ import student.Student;
 
 public class SingletonScheduler {
 	private static CourseMgr manager;
-	private static final String DEFAULT_ENR = "input/SingletonEnrollments.csv";
-	private static final String DEFAULT_PER = "input/SingletonSchedule.csv";
+	private static final String DEFAULT_ENR = "input/test2.csv";
+	private static final String DEFAULT_PER = "input/testperiods2.csv"; // Change to load/save from/to a different file
+	private static final String WORKING_ENR = "input/savedEnrollments.csv";
+	private static final String WORKING_PER = "input/savedPeriods.csv";
 
 	public static void main(String[] args) {
 		manager = CourseMgr.getInstance();
-		//manager.createCourses();
-		System.out.println("Test UI, ver. 1.2");
+		// manager.createTestCourses(); // Uncomment for debugging using test input in
+		// CourseMgr class
+		System.out.println("UI, ver. 1.3");
 		Scanner console = new Scanner(System.in);
-		
+
 		String selection = "";
 
 		System.out.println("Use default input (D)");
@@ -25,13 +28,13 @@ public class SingletonScheduler {
 		System.out.println("\nSelect Option: ");
 		selection = console.nextLine();
 		if (selection.contentEquals("D")) {
-			manager.readCourses(DEFAULT_ENR);
+			manager.loadCourseEnrollments(DEFAULT_ENR);
 			manager.loadPeriods(DEFAULT_PER);
 		} else if (selection.equals("S")) {
 			System.out.println("Enter filename for course enrollments: ");
 			selection = console.nextLine();
 			try {
-				manager.readCourses(selection);
+				manager.loadCourseEnrollments(selection);
 				System.out.println("\nCourses loaded.");
 			} catch (IllegalArgumentException e) {
 				System.out.println(e.getMessage());
@@ -47,12 +50,12 @@ public class SingletonScheduler {
 				System.exit(0);
 			}
 		}
-		
+
 		mainMenu(console);
 	}
 
 	private static void mainMenu(Scanner console) {
-		
+
 		String selection = "";
 
 		while (!selection.equals("Q")) {
@@ -62,6 +65,7 @@ public class SingletonScheduler {
 			System.out.println("Student List (S)");
 			System.out.println("Print Course Conflicts (P)");
 			System.out.println("Print Conflict Details (D)");
+			System.out.println("Write Changes to File (W)");
 			System.out.println("Quit Program (Q)");
 			System.out.print("\nSelect Option: ");
 			selection = console.nextLine();
@@ -74,7 +78,12 @@ public class SingletonScheduler {
 				CourseMgr.runConflicts();
 			} else if (selection.equals("P")) {
 				CourseMgr.getCourseConflicts();
+			} else if (selection.equals("W")) {
+				save(console);
 			} else if (selection.equals("Q")) {
+				if (manager.isChangesMade()) {
+					promptSave(console);
+				}
 				System.out.println("Program terminated");
 				console.close();
 				System.exit(0);
@@ -82,6 +91,45 @@ public class SingletonScheduler {
 				System.out.println("\nInvalid Option");
 			}
 		}
+	}
+
+	private static void promptSave(Scanner console) {
+		System.out.println();
+		String save = "";
+		String discard = "";
+		while (!discard.toUpperCase().equals("Y") && !discard.toUpperCase().equals("YES")) {
+			System.out.println("Save Changes? (Y/N): ");
+			save = console.nextLine();
+			if (save.toUpperCase().equals("Y") || save.toUpperCase().equals("YES")) {
+				save(console);
+				discard = "Y";
+			} else {
+				System.out.println("Discard Changes? (Y/N): ");
+				discard = console.nextLine();
+			}
+		}
+	}
+
+	private static void save(Scanner console) {
+		System.out.println();
+		System.out.println("Save Using Defaults? (Y/N): ");
+		String s = console.nextLine();
+		if (s.toUpperCase().equals("Y") || s.toUpperCase().equals("YES")) {
+			manager.saveChanges(WORKING_ENR, WORKING_PER);
+			manager.setChangesMade(false);
+		} else {
+			System.out.println("Save enrollments as: ");
+			String enr = console.nextLine();
+			System.out.println("Save periods as: ");
+			String per = console.nextLine();
+			try {
+				manager.saveChanges(enr, per);
+				manager.setChangesMade(false);
+			} catch (IllegalArgumentException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+
 	}
 
 	private static void viewStudents(Scanner console) {
@@ -170,6 +218,8 @@ public class SingletonScheduler {
 				try {
 					if (!s.addCourse(manager.getCourses().getCourseByName(title))) {
 						System.out.println("\nNo course exists.");
+					} else {
+						manager.setChangesMade(true);
 					}
 				} catch (Exception e) {
 					System.out.println("\nInvalid input.");
@@ -186,6 +236,7 @@ public class SingletonScheduler {
 					String confirm = console.nextLine();
 					if (confirm.equals("Y")) {
 						s.getCourses().remove(course - 1);
+						manager.setChangesMade(true);
 					} else {
 						studentEnrollmentOptions(s, console);
 					}
@@ -227,6 +278,7 @@ public class SingletonScheduler {
 			id = console.next();
 			console.nextLine();
 			CourseMgr.getInstance().getStudents().addStudentToList(new Student(lastName, firstName, id));
+			manager.setChangesMade(true);
 		} catch (Exception e) {
 			System.out.println("\nInvalid input.");
 		}
@@ -239,10 +291,11 @@ public class SingletonScheduler {
 			int student = console.nextInt();
 			console.nextLine();
 			System.out.print("Remove " + CourseMgr.getInstance().getStudents().getStudents().get(student - 1).getName()
-					+ " from the student list? (Y/N)");
+					+ " from the student list? (Y/N): ");
 			String confirm = console.nextLine();
 			if (confirm.equals("Y")) {
 				CourseMgr.getInstance().getStudents().removeStudentFromList(student - 1);
+				manager.setChangesMade(true);
 			}
 		} catch (Exception e) {
 			System.out.print("\nInvalid input.");
@@ -298,6 +351,7 @@ public class SingletonScheduler {
 			String confirm = console.nextLine();
 			if (confirm.equals("Y")) {
 				CourseMgr.getInstance().getCourses().removeCourseFromList(course - 1);
+				manager.setChangesMade(true);
 			}
 		} catch (Exception e) {
 			System.out.print("\nInvalid input.");
@@ -320,6 +374,7 @@ public class SingletonScheduler {
 			period = console.nextInt();
 			console.nextLine();
 			CourseMgr.getInstance().getCourses().addCourseToList(new Course(title, period));
+			manager.setChangesMade(true);
 		} catch (Exception e) {
 			System.out.println("\nInvalid input.");
 		}
@@ -351,6 +406,7 @@ public class SingletonScheduler {
 				try {
 					c.setPeriod(console.nextInt());
 					console.nextLine();
+					manager.setChangesMade(true);
 					System.out.println(c.getTitle() + " is now scheduled for Period " + c.getPeriod());
 				} catch (Exception e) {
 					System.out.println("\nInvalid input.");
@@ -388,6 +444,8 @@ public class SingletonScheduler {
 				try {
 					if (!c.addStudent(manager.getStudents().getStudentById(id))) {
 						System.out.println("No student exists.");
+					} else {
+						manager.setChangesMade(true);
 					}
 				} catch (Exception e) {
 					System.out.println("\nInvalid input.");
@@ -404,6 +462,7 @@ public class SingletonScheduler {
 					String confirm = console.nextLine();
 					if (confirm.equals("Y")) {
 						c.getStudents().remove(student - 1);
+						manager.setChangesMade(true);
 					} else {
 						courseRosterOptions(c, console);
 					}

@@ -10,21 +10,28 @@ public class Course implements Comparable<Course> {
 	private String title;
 	/** Period course is offered */
 	private int period;
+	/** Unique course code of course */
+	private String courseCode;
 
-	public Course(SortedLinkedList<Student> students, String title, int period) {
+	public Course(SortedLinkedList<Student> students, String title, int period, String courseCode) {
 		this.students = students;
 		setTitle(title);
 		setPeriod(period);
+		setCourseCode(courseCode);
 	}
 	
 	public Course(String title, int period) {
-		this(new SortedLinkedList<Student>(), title, period);
+		this(new SortedLinkedList<Student>(), title, period, null);
 	}
 	
 	public Course(String title) {
-		this(new SortedLinkedList<Student>(), title, 0);
+		this(new SortedLinkedList<Student>(), title, 0, null);
 	}
 	
+	public Course(String title, String courseCode) {
+		this(new SortedLinkedList<Student>(), title, 0, courseCode);
+	}
+
 	/**
 	 * Adds a new student name to course.  Returns true if added.
 	 * 
@@ -153,6 +160,20 @@ public class Course implements Comparable<Course> {
 		} else if (!title.equals(other.title))
 			return false;
 		return true;
+	}
+
+	/**
+	 * @return the courseCode
+	 */
+	public String getCourseCode() {
+		return courseCode;
+	}
+
+	/**
+	 * @param courseCode the courseCode to set
+	 */
+	public void setCourseCode(String courseCode) {
+		this.courseCode = courseCode;
 	}
 	
 	
