@@ -58,8 +58,8 @@ public class CourseMgr {
 		CourseIO.loadCourseEnrollments(instance, file);
 	}
 
-	public void loadPeriods(String file) {
-		CourseIO.loadPeriods(instance, file);
+	public void loadPeriods(String file, boolean useListMode) {
+		CourseIO.loadPeriods(instance, file, useListMode);
 	}
 
 	public void saveChanges(String enrollFile, String periodFile) {

@@ -144,9 +144,13 @@ public class Student implements Comparable<Student> {
 	}
 
 	public String getCoursesAsString() {
+		int numCourses = courses.size();
+		if (numCourses == 0) {
+			return "<No Courses>";
+		}
 		String c = "";
 		int count = 0;
-		for (int i = 0; i < courses.size(); i++) {
+		for (int i = 0; i < numCourses; i++) {
 			c += count + 1 + ". " + courses.get(i).toString() + "\n";
 			count++;
 		}

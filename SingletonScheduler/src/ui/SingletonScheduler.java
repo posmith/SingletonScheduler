@@ -8,10 +8,10 @@ import student.Student;
 
 public class SingletonScheduler {
 	private static CourseMgr manager;
-	private static final String DEFAULT_ENR = "input/test2.csv";
-	private static final String DEFAULT_PER = "input/testperiods2.csv"; // Change to load/save from/to a different file
-	private static final String WORKING_ENR = "input/savedEnrollments.csv";
-	private static final String WORKING_PER = "input/savedPeriods.csv";
+	private static final String DEFAULT_ENR_LOAD = "input/savedEnrollments.csv"; // Change to load from a different file
+	private static final String DEFAULT_PER_LOAD = "input/savedPeriods.csv"; // Change to load from a different file
+	private static final String DEFAULT_ENR_SAVE = "input/savedEnrollments.csv"; // Change to save to a different file
+	private static final String DEFAULT_PER_SAVE = "input/savedPeriods.csv"; // Change to save to a different file
 
 	public static void main(String[] args) {
 		manager = CourseMgr.getInstance();
@@ -28,8 +28,8 @@ public class SingletonScheduler {
 		System.out.println("\nSelect Option: ");
 		selection = console.nextLine();
 		if (selection.contentEquals("D")) {
-			manager.loadCourseEnrollments(DEFAULT_ENR);
-			manager.loadPeriods(DEFAULT_PER);
+			manager.loadCourseEnrollments(DEFAULT_ENR_LOAD);
+			manager.loadPeriods(DEFAULT_PER_LOAD, true);
 		} else if (selection.equals("S")) {
 			System.out.println("Enter filename for course enrollments: ");
 			selection = console.nextLine();
@@ -40,10 +40,18 @@ public class SingletonScheduler {
 				System.out.println(e.getMessage());
 				System.exit(0);
 			}
+			while (!selection.equals("L") && !selection.equals("M")) {
+				System.out.println("Load periods by list (L) or schedule matrix (M)? ");
+				selection = console.nextLine();
+				if (!selection.equals("L") && !selection.equals("M")) {
+					System.out.println("Invalid input\n");
+				}
+			}
+			boolean useListMode = (selection.equals("L")) ? true : false;
 			System.out.println("Enter filename for course periods: ");
 			selection = console.nextLine();
 			try {
-				manager.loadPeriods(selection);
+				manager.loadPeriods(selection, useListMode);
 				System.out.println("\nPeriods set.");
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
@@ -102,7 +110,9 @@ public class SingletonScheduler {
 			save = console.nextLine();
 			if (save.toUpperCase().equals("Y") || save.toUpperCase().equals("YES")) {
 				save(console);
-				discard = "Y";
+				if (!manager.isChangesMade()) {
+					discard = "Y";
+				}
 			} else {
 				System.out.println("Discard Changes? (Y/N): ");
 				discard = console.nextLine();
@@ -115,8 +125,12 @@ public class SingletonScheduler {
 		System.out.println("Save Using Defaults? (Y/N): ");
 		String s = console.nextLine();
 		if (s.toUpperCase().equals("Y") || s.toUpperCase().equals("YES")) {
-			manager.saveChanges(WORKING_ENR, WORKING_PER);
-			manager.setChangesMade(false);
+			try {
+				manager.saveChanges(DEFAULT_ENR_SAVE, DEFAULT_PER_SAVE);
+				manager.setChangesMade(false);
+			} catch (IllegalArgumentException e) {
+				System.out.println(e.getMessage());
+			}
 		} else {
 			System.out.println("Save enrollments as: ");
 			String enr = console.nextLine();
@@ -158,7 +172,7 @@ public class SingletonScheduler {
 			} else if (selection.equals("M")) {
 				mainMenu(console);
 			} else if (selection.equals("S")) {
-				System.out.print(CourseMgr.getInstance().getCourses().toString());
+				// Restart loop
 			} else {
 				try {
 					s = CourseMgr.getInstance().getStudents().getStudents().get(Integer.parseInt(selection) - 1);
