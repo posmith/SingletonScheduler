@@ -152,12 +152,12 @@ public class CourseMgr {
 	}
 
 	public void createTestCourses() {
-		getInstance().getStudents().addStudentToList(new Student("Smith", "Patrick", "1"));
-		getInstance().getStudents().addStudentToList(new Student("Jones", "Don", "2"));
-		getInstance().getStudents().addStudentToList(new Student("Proctor", "Belinda", "3"));
-		getInstance().getStudents().addStudentToList(new Student("Bullock", "Marla", "4"));
-		getInstance().getStudents().addStudentToList(new Student("Do", "Harrison", "5"));
-		getInstance().getStudents().addStudentToList(new Student("Thomas", "Clifton", "6"));
+		getInstance().getStudents().addStudentToList(new Student("Bradbury", "Ray", "1"));
+		getInstance().getStudents().addStudentToList(new Student("Adams", "Douglas", "2"));
+		getInstance().getStudents().addStudentToList(new Student("Tolkien", "John", "3"));
+		getInstance().getStudents().addStudentToList(new Student("Herbert", "Frank", "4"));
+		getInstance().getStudents().addStudentToList(new Student("Heinlein", "Robert", "5"));
+		getInstance().getStudents().addStudentToList(new Student("Asimov", "Isaac", "6"));
 
 		getInstance().getCourses().addCourseToList("Test Course 1", 1);
 		getInstance().getCourses().addCourseToList("Test Course 2", 2);
