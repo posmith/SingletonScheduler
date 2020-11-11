@@ -6,6 +6,13 @@ import course.Course;
 import manager.CourseMgr;
 import student.Student;
 
+/**
+ * UI for SingletonScheduler program. Runs within Eclipse IDE using the
+ * SingletonScheduler project.
+ * 
+ * @author Patrick Smith
+ *
+ */
 public class SingletonScheduler {
 	private static CourseMgr manager;
 	private static final String DEFAULT_ENR_LOAD = "input/savedEnrollments.csv"; // Change to load from a different file
@@ -13,6 +20,12 @@ public class SingletonScheduler {
 	private static final String DEFAULT_ENR_SAVE = "input/savedEnrollments.csv"; // Change to save to a different file
 	private static final String DEFAULT_PER_SAVE = "input/savedPeriods.csv"; // Change to save to a different file
 
+	/**
+	 * Calls instance of manager and runs program through series of screens and user
+	 * input.
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		manager = CourseMgr.getInstance();
 		// manager.createTestCourses(); // Uncomment for debugging using test input in
@@ -62,6 +75,13 @@ public class SingletonScheduler {
 		mainMenu(console);
 	}
 
+	/**
+	 * Displays main menu of SingletonScheduler, with options to view the Course
+	 * List, Student List, Course Conflicts (general and detailed), save data to a
+	 * file, or quit the program.
+	 * 
+	 * @param console
+	 */
 	private static void mainMenu(Scanner console) {
 
 		String selection = "";
@@ -101,6 +121,11 @@ public class SingletonScheduler {
 		}
 	}
 
+	/**
+	 * Prompts a save before quitting the program if changes have been made.
+	 * 
+	 * @param console
+	 */
 	private static void promptSave(Scanner console) {
 		System.out.println();
 		String save = "";
@@ -120,6 +145,12 @@ public class SingletonScheduler {
 		}
 	}
 
+	/**
+	 * Prompts user whether or not to save using defaults or specify save files for
+	 * course enrollments and periods.
+	 * 
+	 * @param console
+	 */
 	private static void save(Scanner console) {
 		System.out.println();
 		System.out.println("Save Using Defaults? (Y/N): ");
@@ -146,6 +177,12 @@ public class SingletonScheduler {
 
 	}
 
+	/**
+	 * Menu for student list used to add to, delete from, or view student list, or
+	 * return to main menu.
+	 * 
+	 * @param console
+	 */
 	private static void viewStudents(Scanner console) {
 
 		String selection = "";
@@ -185,6 +222,13 @@ public class SingletonScheduler {
 		}
 	}
 
+	/**
+	 * Menu for an individual student's options, including viewing his/her course
+	 * enrollments, returning to the student list menu or the main menu.
+	 * 
+	 * @param s
+	 * @param console
+	 */
 	private static void studentOptions(Student s, Scanner console) {
 		String selection = "";
 
@@ -211,6 +255,14 @@ public class SingletonScheduler {
 		}
 	}
 
+	/**
+	 * Menu for an individual student's course enrollment options, including adding
+	 * or removing a course from their enrollments, returning to the student options
+	 * menu or the main menu.
+	 * 
+	 * @param s
+	 * @param console
+	 */
 	private static void studentEnrollmentOptions(Student s, Scanner console) {
 		String selection = "";
 
@@ -269,6 +321,12 @@ public class SingletonScheduler {
 
 	}
 
+	/**
+	 * Prompts user to input data on a new student added manually (not from file) to
+	 * the Student List.
+	 * 
+	 * @param console
+	 */
 	private static void addStudent(Scanner console) {
 		String firstName = "";
 		String lastName = "";
@@ -299,6 +357,11 @@ public class SingletonScheduler {
 		viewStudents(console);
 	}
 
+	/**
+	 * Prompts user to specify student to manually remove from Student List.
+	 * 
+	 * @param console
+	 */
 	private static void deleteStudent(Scanner console) {
 		System.out.print("Which student number: ");
 		try {
@@ -317,6 +380,12 @@ public class SingletonScheduler {
 		viewStudents(console);
 	}
 
+	/**
+	 * Menu for Course List used to add to, delete from, or view Course List, or
+	 * return to main menu.
+	 * 
+	 * @param console
+	 */
 	private static void viewCourses(Scanner console) {
 
 		String selection = "";
@@ -355,6 +424,11 @@ public class SingletonScheduler {
 		}
 	}
 
+	/**
+	 * Prompts user to specify which course to manually remove from Course List.
+	 * 
+	 * @param console
+	 */
 	private static void deleteCourse(Scanner console) {
 		System.out.print("Which course number: ");
 		try {
@@ -373,6 +447,12 @@ public class SingletonScheduler {
 		viewCourses(console);
 	}
 
+	/**
+	 * Prompts user to input data on a new course added manually (not from file) to
+	 * the Course List.
+	 * 
+	 * @param console
+	 */
 	private static void addCourse(Scanner console) {
 		String title = "";
 		int period;
@@ -395,6 +475,13 @@ public class SingletonScheduler {
 		viewCourses(console);
 	}
 
+	/**
+	 * Menu for an individual course's options, including to view its Student
+	 * Roster, change its period, return to Course List menu or main menu.
+	 * 
+	 * @param c
+	 * @param console
+	 */
 	private static void courseOptions(Course c, Scanner console) {
 
 		String selection = "";
@@ -434,6 +521,14 @@ public class SingletonScheduler {
 		}
 	}
 
+	/**
+	 * View options for an individual course's student roster, including adding a
+	 * student to the roster, removing a student from the roster, viewing the
+	 * roster, or returning to the course options or main menus.
+	 * 
+	 * @param c
+	 * @param console
+	 */
 	private static void courseRosterOptions(Course c, Scanner console) {
 
 		String selection = "";

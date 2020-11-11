@@ -11,20 +11,43 @@ import student.Student;
 import student.StudentList;
 import util.SortedLinkedList;
 
+/**
+ * Creates Singleton use of program to assist with use over multiple sessions.
+ * CourseMgr abstracts functions from CourseList and allows for IO on specific
+ * instance.
+ * 
+ * @author Patrick
+ *
+ */
 public class CourseMgr {
 
+	/** List of courses */
 	private static CourseList courses;
+	/** List of students */
 	private static StudentList students;
+	/** List of conflicts */
 	private static SortedLinkedList<Conflict> conflicts;
+	/** Instance used in Singleton design */
 	private static CourseMgr instance;
+	/** Tracks changes in order to prompt save before closing */
 	private boolean changesMade;
 
+	/**
+	 * Constructs new CourseMgr with empty course and student lists. Private to
+	 * prevent multiple instances at once.
+	 */
 	private CourseMgr() {
 		courses = new CourseList();
 		students = new StudentList();
 		setChangesMade(false);
 	}
 
+	/**
+	 * Static call to getInstance ensures that only a single instance of CourseMgr
+	 * can exist at a time.
+	 * 
+	 * @return
+	 */
 	public static CourseMgr getInstance() {
 		if (instance == null) {
 			instance = new CourseMgr();
@@ -32,15 +55,27 @@ public class CourseMgr {
 		return instance;
 	}
 
+	/**
+	 * Returns course list
+	 * 
+	 * @return
+	 */
 	public CourseList getCourses() {
 		return courses;
 	}
 
+	/**
+	 * Returns student list
+	 * 
+	 * @return
+	 */
 	public StudentList getStudents() {
 		return students;
 	}
-	
+
 	/**
+	 * Returns whether or not changes have been made
+	 * 
 	 * @return the changesMade
 	 */
 	public boolean isChangesMade() {
@@ -48,25 +83,49 @@ public class CourseMgr {
 	}
 
 	/**
+	 * Sets when changes have been made
+	 * 
 	 * @param changesMade the changesMade to set
 	 */
 	public void setChangesMade(boolean b) {
 		changesMade = b;
 	}
 
+	/**
+	 * Loads course enrollments from file
+	 * 
+	 * @param file
+	 */
 	public void loadCourseEnrollments(String file) {
 		CourseIO.loadCourseEnrollments(instance, file);
 	}
 
+	/**
+	 * Loads course periods from file
+	 * 
+	 * @param file
+	 * @param useListMode
+	 */
 	public void loadPeriods(String file, boolean useListMode) {
 		CourseIO.loadPeriods(instance, file, useListMode);
 	}
 
+	/**
+	 * Writes changes to enrollment and period files. Creates files if they don't
+	 * already exist.
+	 * 
+	 * @param enrollFile
+	 * @param periodFile
+	 */
 	public void saveChanges(String enrollFile, String periodFile) {
 		CourseIO.writeEnrollmentsToFile(instance, enrollFile);
 		CourseIO.writePeriodsToFile(instance, periodFile);
 	}
 
+	/**
+	 * Runs conflicts based on current course periods and student enrollments.
+	 * Prints student names, conflicting courses, and course periods.
+	 */
 	public static void runConflicts() {
 		conflicts = new SortedLinkedList<Conflict>();
 		for (int i = 0; i < students.size(); i++) {
@@ -98,6 +157,9 @@ public class CourseMgr {
 		}
 	}
 
+	/**
+	 * Prints conflicts by period.
+	 */
 	public static void getCourseConflicts() {
 		conflicts = new SortedLinkedList<Conflict>();
 		TreeSet<Course> coursesInConflict = new TreeSet<Course>();
@@ -151,6 +213,9 @@ public class CourseMgr {
 		}
 	}
 
+	/**
+	 * Used to debug CourseMgr functionality
+	 */
 	public void createTestCourses() {
 		getInstance().getStudents().addStudentToList(new Student("Bradbury", "Ray", "1"));
 		getInstance().getStudents().addStudentToList(new Student("Adams", "Douglas", "2"));

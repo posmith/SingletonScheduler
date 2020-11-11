@@ -14,8 +14,23 @@ import manager.CourseMgr;
 import student.Student;
 import util.ArrayList;
 
+/**
+ * Provides static methods for loading data into a CourseMgr and saving data to
+ * file.
+ * 
+ * @author Patrick
+ *
+ */
 public class CourseIO {
 
+	/**
+	 * Loads course enrollments from comma-delimited file. Each line should be an
+	 * individual course enrollment and formatted as:
+	 * [student_id],[student_last_name],[student_first_name],[course_code],[course_name]
+	 * 
+	 * @param manager
+	 * @param file
+	 */
 	public static void loadCourseEnrollments(CourseMgr manager, String file) {
 		ArrayList<String> lines = new ArrayList<String>();
 		try {
@@ -65,9 +80,17 @@ public class CourseIO {
 
 	}
 
+	/**
+	 * Loads courses and periods from a comma-delimited file created by saving data
+	 * from a previous session. Each entry should be on a separate line and
+	 * formatted as: [course_title],[course_period]
+	 * 
+	 * @param manager
+	 * @param file
+	 * @param useListMode
+	 */
 	public static void loadPeriods(CourseMgr manager, String file, boolean useListMode) {
-		
-		
+
 		ArrayList<String> lines = new ArrayList<String>();
 		try {
 			Scanner fileReader = new Scanner(new FileInputStream(file));
@@ -121,6 +144,13 @@ public class CourseIO {
 		System.out.println("Courses read: " + manager.getCourses().size());
 	}
 
+	/**
+	 * Saves changes to enrollment file for use in future session. Creates file if
+	 * one does not already exist.
+	 * 
+	 * @param manager
+	 * @param file
+	 */
 	public static void writeEnrollmentsToFile(CourseMgr manager, String file) {
 		if (!file.substring(file.length() - 4).equals(".txt") && !file.substring(file.length() - 4).equals(".csv")) {
 			throw new IllegalArgumentException("Save file must be .txt or .csv");
@@ -146,6 +176,13 @@ public class CourseIO {
 		}
 	}
 
+	/**
+	 * Saves changes to course periods file for use in future session. Creates file if
+	 * one does not already exist.
+	 * 
+	 * @param manager
+	 * @param file
+	 */
 	public static void writePeriodsToFile(CourseMgr manager, String file) {
 		if (!file.substring(file.length() - 4).equals(".txt") && !file.substring(file.length() - 4).equals(".csv")) {
 			throw new IllegalArgumentException("Save file must be .txt or .csv");

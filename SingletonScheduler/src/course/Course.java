@@ -3,6 +3,13 @@ package course;
 import student.Student;
 import util.SortedLinkedList;
 
+/**
+ * POJO for a course which contains a title, a list of students enrolled, a
+ * period, and a unique course code.
+ * 
+ * @author Patrick
+ *
+ */
 public class Course implements Comparable<Course> {
 	/** List of students in the course */
 	private SortedLinkedList<Student> students;
@@ -13,27 +20,55 @@ public class Course implements Comparable<Course> {
 	/** Unique course code of course */
 	private String courseCode;
 
+	/**
+	 * Constructor with parameters to specify all elements of a course.
+	 * 
+	 * @param students
+	 * @param title
+	 * @param period
+	 * @param courseCode
+	 */
 	public Course(SortedLinkedList<Student> students, String title, int period, String courseCode) {
 		this.students = students;
 		setTitle(title);
 		setPeriod(period);
 		setCourseCode(courseCode);
 	}
-	
+
+	/**
+	 * Constructor with parameters for title and period, and creates an empty
+	 * student list.
+	 * 
+	 * @param title
+	 * @param period
+	 */
 	public Course(String title, int period) {
 		this(new SortedLinkedList<Student>(), title, period, null);
 	}
-	
+
+	/**
+	 * Constructor with parameter for title only, creates empty student list and
+	 * period 0 (unusable)
+	 * 
+	 * @param title
+	 */
 	public Course(String title) {
 		this(new SortedLinkedList<Student>(), title, 0, null);
 	}
-	
+
+	/**
+	 * Constructor with parameters for title and course code, creates empty student
+	 * list and period 0 (unusable)
+	 * 
+	 * @param title
+	 * @param courseCode
+	 */
 	public Course(String title, String courseCode) {
 		this(new SortedLinkedList<Student>(), title, 0, courseCode);
 	}
 
 	/**
-	 * Adds a new student name to course.  Returns true if added.
+	 * Adds a new student name to course. Returns true if added.
 	 * 
 	 * @param student name of student
 	 * @return true if student can be added to course
@@ -51,7 +86,7 @@ public class Course implements Comparable<Course> {
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns list of students enrolled in course as a String.
 	 * 
@@ -66,7 +101,7 @@ public class Course implements Comparable<Course> {
 		}
 		return s;
 	}
-	
+
 	/**
 	 * Returns list of students enrolled in course as a list.
 	 * 
@@ -75,7 +110,7 @@ public class Course implements Comparable<Course> {
 	public SortedLinkedList<Student> getStudents() {
 		return students;
 	}
-	
+
 	/**
 	 * Sets title of course. Throws IllegalArgumentException if title is null.
 	 * 
@@ -87,18 +122,19 @@ public class Course implements Comparable<Course> {
 		}
 		this.title = title;
 	}
-	
+
 	/**
 	 * Returns title of course.
 	 * 
-	 * @return title of course 
+	 * @return title of course
 	 */
 	public String getTitle() {
 		return title;
 	}
-	
+
 	/**
-	 * Sets period course meets. Throws IllegalArgumentException if period is less than 1 or greater than 7.
+	 * Sets period course meets. Throws IllegalArgumentException if period is less
+	 * than 1 or greater than 7.
 	 * 
 	 * @param period course meets
 	 */
@@ -108,7 +144,7 @@ public class Course implements Comparable<Course> {
 		}
 		this.period = period;
 	}
-	
+
 	/**
 	 * Returns period course meets.
 	 * 
@@ -128,6 +164,9 @@ public class Course implements Comparable<Course> {
 		return 0;
 	}
 
+	/**
+	 * Returns course as string with title and period
+	 */
 	public String toString() {
 		String title = getTitle();
 		if (title.length() > 20) {
@@ -139,6 +178,9 @@ public class Course implements Comparable<Course> {
 		return "TITLE: " + title + "\tPERIOD: " + getPeriod();
 	}
 
+	/**
+	 * Returns hashcode for this object
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -147,6 +189,9 @@ public class Course implements Comparable<Course> {
 		return result;
 	}
 
+	/**
+	 * Returns true if parameter matches this object, false otherwise
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -175,7 +220,5 @@ public class Course implements Comparable<Course> {
 	public void setCourseCode(String courseCode) {
 		this.courseCode = courseCode;
 	}
-	
-	
-	
+
 }
