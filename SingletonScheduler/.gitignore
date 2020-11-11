@@ -1,6 +1,2 @@
 /bin/
 /test/
-/util/ArrayList.java
-/util/NoSuchListElementException.java
-/util/SimpleListIterator.java
-/util/SortedArrayList.java
