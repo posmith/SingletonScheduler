@@ -27,6 +27,10 @@ public class SingletonScheduler {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		boot();
+	}
+
+	private static void boot() {
 		manager = CourseMgr.getInstance();
 		// manager.createTestCourses(); // Uncomment for debugging using test input in
 		// CourseMgr class
@@ -39,10 +43,15 @@ public class SingletonScheduler {
 		System.out.println("Select files to load from (S)");
 		System.out.println("Enter courses manually (E)");
 		System.out.println("\nSelect Option: ");
-		selection = console.nextLine();
+		selection = console.nextLine().toUpperCase();
 		if (selection.contentEquals("D")) {
-			manager.loadCourseEnrollments(DEFAULT_ENR_LOAD);
-			manager.loadPeriods(DEFAULT_PER_LOAD, true);
+			try {
+				manager.loadCourseEnrollments(DEFAULT_ENR_LOAD);
+				manager.loadPeriods(DEFAULT_PER_LOAD, true);
+			} catch (IllegalArgumentException e) {
+				System.out.println("No defaults specified. Try entering courses manually.");
+				boot();
+			}
 		} else if (selection.equals("S")) {
 			System.out.println("Enter filename for course enrollments: ");
 			selection = console.nextLine();
@@ -50,8 +59,8 @@ public class SingletonScheduler {
 				manager.loadCourseEnrollments(selection);
 				System.out.println("\nCourses loaded.");
 			} catch (IllegalArgumentException e) {
-				System.out.println(e.getMessage());
-				System.exit(0);
+				System.out.println("Unable to load file.\n");
+				boot();
 			}
 			while (!selection.equals("L") && !selection.equals("M")) {
 				System.out.println("Load periods by list (L) or schedule matrix (M)? ");
@@ -96,14 +105,14 @@ public class SingletonScheduler {
 			System.out.println("Write Changes to File (W)");
 			System.out.println("Quit Program (Q)");
 			System.out.print("\nSelect Option: ");
-			selection = console.nextLine();
+			selection = console.nextLine().toUpperCase();
 
 			if (selection.equals("C")) {
 				viewCourses(console);
 			} else if (selection.equals("S")) {
 				viewStudents(console);
 			} else if (selection.equals("D")) {
-				CourseMgr.runConflicts();
+				CourseMgr.runConflicts(true);
 			} else if (selection.equals("P")) {
 				CourseMgr.getCourseConflicts();
 			} else if (selection.equals("W")) {
@@ -199,7 +208,7 @@ public class SingletonScheduler {
 			System.out.println("Main Menu (M)");
 			System.out.print("\nSelect Option: ");
 
-			selection = console.nextLine();
+			selection = console.nextLine().toUpperCase();
 			Student s;
 
 			if (selection.equals("A")) {
@@ -276,7 +285,7 @@ public class SingletonScheduler {
 			System.out.println("Return to Student Options (S)");
 			System.out.println("Return to Main Menu (M)");
 			System.out.print("\nSelect Option: ");
-			selection = console.nextLine();
+			selection = console.nextLine().toUpperCase();
 
 			if (selection.equals("A")) {
 				System.out.print("Enter course title: ");
@@ -402,7 +411,7 @@ public class SingletonScheduler {
 			System.out.println("Main Menu (M)");
 			System.out.print("\nSelect Option: ");
 
-			selection = console.nextLine();
+			selection = console.nextLine().toUpperCase();
 			Course c;
 
 			if (selection.equals("A")) {
@@ -495,7 +504,7 @@ public class SingletonScheduler {
 			System.out.println("Return to Main Menu (M)");
 			System.out.print("\nSelect Option: ");
 
-			selection = console.nextLine();
+			selection = console.nextLine().toUpperCase();
 
 			if (selection.equals("C")) {
 				viewCourses(console);
@@ -503,7 +512,21 @@ public class SingletonScheduler {
 				System.out.print(c.getStudentsAsString() + "\n");
 				courseRosterOptions(c, console);
 			} else if (selection.equals("P")) {
-				System.out.print("Change to which Period?: ");
+				// save current period to variable
+				int currPeriod = c.getPeriod();
+				// print "Options and corresponding conflicts"
+				System.out.println("\nConflicts by period for " + c.getTitle());
+				// for 1-7:
+				for (int i = 1; i <= 7; i++) {
+				 	// set period and run conflicts
+					// print i + ". " runConflicts() + " total conflicts"
+					c.setPeriod(i);
+					System.out.println("Period " + i + ": " + CourseMgr.runConflicts(false) + " total conflicts");
+				}
+				// return to original period
+				c.setPeriod(currPeriod);
+				
+				System.out.print("\nChange to which Period?: ");
 				try {
 					c.setPeriod(console.nextInt());
 					console.nextLine();
@@ -543,7 +566,7 @@ public class SingletonScheduler {
 			System.out.println("Return to Course Options (C)");
 			System.out.println("Return to Main Menu (M)");
 			System.out.print("\nSelect Option: ");
-			selection = console.nextLine();
+			selection = console.nextLine().toUpperCase();
 
 			if (selection.equals("A")) {
 				String id;

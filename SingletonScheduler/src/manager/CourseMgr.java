@@ -126,7 +126,7 @@ public class CourseMgr {
 	 * Runs conflicts based on current course periods and student enrollments.
 	 * Prints student names, conflicting courses, and course periods.
 	 */
-	public static void runConflicts() {
+	public static int runConflicts(boolean print) {
 		conflicts = new SortedLinkedList<Conflict>();
 		for (int i = 0; i < students.size(); i++) {
 			Student s = students.getStudents().get(i);
@@ -143,18 +143,21 @@ public class CourseMgr {
 				}
 			}
 		}
-		if (conflicts.size() == 0) {
-			System.out.println("\nNo conflicts.");
+		if (print) {
+			if (conflicts.size() == 0) {
+				System.out.println("\nNo conflicts.");
 
-		} else {
-			for (int i = 0; i < conflicts.size(); i++) {
-				System.out.println(conflicts.get(i).getStudentName() + ","
-						+ conflicts.get(i).getConflictingCourses().get(0).getTitle() + ","
-						+ conflicts.get(i).getConflictingCourses().get(1).getTitle() + ","
-						+ conflicts.get(i).getConflictingCourses().get(0).getPeriod());
+			} else {
+				for (int i = 0; i < conflicts.size(); i++) {
+					System.out.println(conflicts.get(i).getStudentName() + ","
+							+ conflicts.get(i).getConflictingCourses().get(0).getTitle() + ","
+							+ conflicts.get(i).getConflictingCourses().get(1).getTitle() + ","
+							+ conflicts.get(i).getConflictingCourses().get(0).getPeriod());
+				}
+				System.out.println("Total number of conflicts: " + conflicts.size());
 			}
-			System.out.println("Total number of conflicts: " + conflicts.size());
 		}
+		return conflicts.size();
 	}
 
 	/**
